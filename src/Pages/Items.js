@@ -1,6 +1,5 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import { format } from 'timeago.js';
 
@@ -11,23 +10,45 @@ const Items = () => {
     useEffect(()=>{
         getData()
     },[render])
+    const [disp,setDisp]=useState('')
+    const styles1={
+        display:disp
+    }
+    const styles2={
+        display:disp==''?'none':''
+    }
     async function getData(){
-        const {data}=await axios.get('http://localhost:8000/item/getitems',{
-            headers:{
-                "access-token":user.token
-            }
-        })
-        let fdata=data.filter(x=>x.buyer===null).reverse()
-        setItems(fdata)
+        try {
+            setDisp('none')
+            await axios.get('https://buyandsellapp.onrender.com/item/getitems',{
+                headers:{
+                    "access-token":user.token
+                }
+            })
+            .then(x=>{
+                let fdata=x.data.filter(x=>x.buyer===null).reverse()
+                setItems(fdata)
+                setDisp('')
+            })
+        } catch (error) {
+            console.log(error)
+        }
     }
   return (
     <div>
+        <div>
         <img className='themeimg' src='https://www.reliancesmartmoney.com/images/default-source/default-album/interestrate.jpg?sfvrsn=0'/>
-        {items?<div className='items'>
+        {items?<div className='items' style={styles1}>
             {items.map((item)=>(
                 <Item key={item._id} item={item} user={user} render={render} setRender={setRender}/>
             ))}
         </div>:''}
+        </div>
+        <div className="text-center" style={styles2}>
+            <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>
+        </div>
     </div>
   )
 }
@@ -50,7 +71,7 @@ function Item({item,user,render,setRender}){
         async function buyitem(){
             try {
                 setDisp('none')
-                await axios.put('http://localhost:8000/item/buyitem',{
+                await axios.put('https://buyandsellapp.onrender.com/item/buyitem',{
                 itemId:item._id
             },{
               headers:{

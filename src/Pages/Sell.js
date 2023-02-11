@@ -39,7 +39,7 @@ const onSubmit=(values)=>{
    async function additem(){
     try {
         setDisp('none')
-        await axios.post('http://localhost:8000/item/additem',{
+        await axios.post('https://buyandsellapp.onrender.com/item/additem',{
         ...values,seller:user._id
     },{
       headers:{

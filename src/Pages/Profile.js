@@ -13,14 +13,29 @@ const Profile = () => {
         getData()
     },[render])
     async function getData(){
-        const {data}=await axios.get('http://localhost:8000/item/getitems',{
-            headers:{
-                "access-token":user.token
-            }
-        })
-        setItems(data.filter(x=>x.seller._id===user._id).reverse())
-        let fdata=data.filter(x=>x.buyer)
+      setDisp('none')
+      try {
+        await axios.get('https://buyandsellapp.onrender.com/item/getitems',{
+          headers:{
+              "access-token":user.token
+          }
+      })
+      .then(x=>{
+        setItems(x.data.filter(x=>x.seller._id===user._id).reverse())
+        let fdata=x.data.filter(x=>x.buyer)
         setBoughtitems(fdata.filter(x=>x.buyer._id===user._id).reverse())
+        setDisp('')
+      })
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    const [disp,setDisp]=useState('')
+    const styles1={
+        display:disp
+    }
+    const styles2={
+        display:disp==''?'none':''
     }
   return (
     <div className='  profilecont'>
@@ -40,17 +55,31 @@ const Profile = () => {
         </TabList>
         <TabPanels>
           <TabPanel px={'0'}>
-            <div className='items'>
-              {items?.map((item)=>(
-                  <Item key={item._id} item={item} user={user} render={render} setRender={setRender}/>
-              ))}
+            <div>
+              <div className='items' style={styles1}>
+                {items?.map((item)=>(
+                    <Item key={item._id} item={item} user={user} render={render} setRender={setRender}/>
+                ))}
+              </div>
+              <div className="text-center" style={styles2}>
+                <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
             </div>
           </TabPanel>
           <TabPanel px={'0'}>
-          <div className='items'>
-              {boughtitems?.map((item)=>(
-                  <BoughtItem key={item._id} item={item} user={user}/>
-              ))}
+            <div>
+              <div className='items' style={styles1}>
+                {boughtitems?.map((item)=>(
+                    <BoughtItem key={item._id} item={item} user={user}/>
+                ))}
+              </div>
+              <div className="text-center" style={styles2}>
+                <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
             </div>
           </TabPanel>
         </TabPanels>
@@ -76,7 +105,7 @@ function Item({item,user,render,setRender}){
     async function removeitem(){
       try {
           setDisp('none')
-          await axios.delete('http://localhost:8000/item/removeitem', {
+          await axios.delete('https://buyandsellapp.onrender.com/item/removeitem', {
             headers: {
               "access-token":user.token
             },

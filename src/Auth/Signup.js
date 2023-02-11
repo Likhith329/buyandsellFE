@@ -44,7 +44,7 @@ const Signup = () => {
        async function signup(){
         try {
             setDisp('none')
-            await axios.post('http://localhost:8000/register/signup',{
+            await axios.post('https://buyandsellapp.onrender.com/register/signup',{
             ...values
         }).then(res=>{
             notifysuccess()
