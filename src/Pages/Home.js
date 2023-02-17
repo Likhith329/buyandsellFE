@@ -14,12 +14,14 @@ const Home = () => {
         <div>
             {user?
             <div>
-                <div className='container-fluid'>
-                    <nav className="navbar navbar-expand-lg ">
+                <div className='container-fluid homecont'>
+                    <nav className="navbar navbar-expand-lg bg-white ">
                         <div className="container-fluid">
                             <a className="navbar-brand" >
                                 <img src='https://cdn.dribbble.com/users/230124/screenshots/11568503/media/93d586c7df366789a31cc68ca16a08c0.jpg?compress=1&resize=1000x750&vertical=top' className='navlogo'/>
                             </a>
+                            {user._id==='63ee86e261a8a0d1c24aadba'?
+                            <span className='admin'>ADMIN</span>:''}
                             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
                             </button>
@@ -27,6 +29,8 @@ const Home = () => {
                             <ul className="navbar-nav me-auto mb-2 mb-lg-0"></ul>
                             <div className='d-flex flex-wrap '>
                                 <button className='btn btn-outline-light navbtn' onClick={()=>{navigate('')}}>HOME</button>
+                                {user._id==='63ee86e261a8a0d1c24aadba'?<button className='btn btn-outline-light navbtn' onClick={()=>{navigate('users')}}>USERS</button>:''}
+                                {user._id==='63ee86e261a8a0d1c24aadba'?<button className='btn btn-outline-light navbtn' onClick={()=>{navigate('transactions')}}>TRANSACTIONS</button>:''}
                                 <button className='btn btn-outline-light navbtn' onClick={()=>{navigate('profile')}}>PROFILE</button>
                                 <button className='btn btn-outline-light navbtn' onClick={()=>{navigate('sell')}}>SELL</button>
                                 <button className='btn btn-outline-light navbtn' onClick={()=>{

@@ -15,7 +15,7 @@ const Profile = () => {
     async function getData(){
       setDisp('none')
       try {
-        await axios.get('https://buyandsellapp.onrender.com/item/getitems',{
+        await axios.get('https://asimplebuyandsellbe.onrender.com/item/getitems',{
           headers:{
               "access-token":user.token
           }
@@ -38,7 +38,7 @@ const Profile = () => {
         display:disp==''?'none':''
     }
   return (
-    <div className='  profilecont'>
+    <div className='profilecont' style={{minHeight:'100vh'}}>
 
       <div className='info'>
         <img className='profilepic' src={user.profilepic}/>
@@ -105,7 +105,7 @@ function Item({item,user,render,setRender}){
     async function removeitem(){
       try {
           setDisp('none')
-          await axios.delete('https://buyandsellapp.onrender.com/item/removeitem', {
+          await axios.delete('https://asimplebuyandsellbe.onrender.com/item/removeitem', {
             headers: {
               "access-token":user.token
             },
@@ -129,7 +129,7 @@ function Item({item,user,render,setRender}){
      removeitem()
   }
   return(
-      <div className='item shadow'>
+      <div className='item shadow' >
           <div className='d-flex justify-content-center'><img className='itemimg' src={item.itempic}/></div>
           <div className='iteminfo'>
               <div className='itemname'>{item.name}</div>

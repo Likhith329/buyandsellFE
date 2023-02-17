@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify'
 import { format } from 'timeago.js';
 
@@ -20,7 +21,7 @@ const Items = () => {
     async function getData(){
         try {
             setDisp('none')
-            await axios.get('https://buyandsellapp.onrender.com/item/getitems',{
+            await axios.get('https://asimplebuyandsellbe.onrender.com/item/getitems',{
                 headers:{
                     "access-token":user.token
                 }
@@ -56,8 +57,10 @@ const Items = () => {
 export default Items
 
 function Item({item,user,render,setRender}){
-    
+
+    const navigate=useNavigate()
     const notifysuccess=()=> toast.success("Item Bought Successfully!!")
+    const notifyremove=()=> toast.success("Item removed Successfully!!")
     const notifyerror=()=> toast.warning("Item Sold Out!!")
     const [disp,setDisp]=useState('')
     const styles1={
@@ -66,12 +69,11 @@ function Item({item,user,render,setRender}){
     const styles2={
         display:disp==''?'none':''
     }
-
     const handlebuy=()=>{
         async function buyitem(){
             try {
                 setDisp('none')
-                await axios.put('https://buyandsellapp.onrender.com/item/buyitem',{
+                await axios.put('https://asimplebuyandsellbe.onrender.com/item/buyitem',{
                 itemId:item._id
             },{
               headers:{
@@ -95,6 +97,49 @@ function Item({item,user,render,setRender}){
            }
            buyitem()
     }
+    const handlecheckout=async()=>{
+        try {
+            setDisp('none')
+            await axios.post('https://asimplebuyandsellbe.onrender.com/stripe/create-checkout-session',{
+                item,userId:user._id
+            }).then((res)=>{
+                setDisp('')
+                if(res.data.url){
+                    window.location.href=res.data.url
+                }
+
+            }).catch(error=>console.log(error))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const handleremove=()=>{
+        async function removeitem(){
+          try {
+              setDisp('none')
+              await axios.delete('https://asimplebuyandsellbe.onrender.com/item/removeitem', {
+                headers: {
+                  "access-token":user.token
+                },
+                data: {
+                  itemId:item._id
+                }
+              }).then(res=>{
+              notifyremove()
+              setRender(!render)
+              setDisp('')
+          })
+          } catch (error) {
+              notifyerror()
+              setTimeout(() => {
+                setRender(!render)
+              }, 1000);
+              setDisp('')
+              console.log(error)
+          }
+         }
+         removeitem()
+      }
     return(
         <div className='item shadow'>
             <div className='d-flex justify-content-center'><img className='itemimg' src={item.itempic}/></div>
@@ -103,16 +148,26 @@ function Item({item,user,render,setRender}){
                 <div className='itemdes'>{item.description}</div>
                 <div className='d-flex justify-content-between align-items-center'>
                     <span className='itemprice'>₹{item.price}</span>
-                    {item.seller._id!=user._id?
+                    {item.seller._id!=user._id && user._id!=='63ee86e261a8a0d1c24aadba'?
                     <div>
-                        <button className='btn btn-primary buybtn' onClick={handlebuy} style={styles1}>Buy</button>
+
+                        <button className='btn btn-primary buybtn' onClick={handlecheckout} style={styles1}>Buy</button>
+
                         <button className='btn btn-primary buybtn' type="button" style={styles2} disabled>
                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         </button>
                     </div>:''}
                 </div>
+                {user._id==='63ee86e261a8a0d1c24aadba'?
+                <div className='d-flex justify-content-between' style={{width:'100%'}}>
+                <button className='btn btn-secondary buybtn'  style={styles1} onClick={()=>{navigate(`edit/${item._id}`)}}>Edit</button>
+                <button className='btn btn-secondary buybtn' type="button" style={styles2} disabled>
+                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        </button>
+                <button className='btn btn-secondary buybtn' onClick={handleremove} style={styles1}>Remove</button>
+            </div>:''}
                 <div className='itemfooter'>
-                    <span className='timeago'>{format(item.createdAt)}</span>
+                    <span className='timeago'>{format(item.updatedAt)}</span>
                     <span className='byname'>by {item.seller._id===user._id?'You':<span>{item.seller.name}</span>}</span>
                 </div>
             </div>

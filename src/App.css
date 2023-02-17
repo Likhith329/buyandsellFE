@@ -1,9 +1,14 @@
+.homecont{
+  background-image: url('https://img.freepik.com/free-photo/blue-abstract-gradient-wave-wallpaper_53876-108364.jpg')!important;
+  background-repeat: no-repeat!important;background-size: cover!important;
+}
 .logo{
  width: 100px;margin: 10px;
 }
 .handshake{
   width: 50%
 }
+
 .form{
   display: flex;flex-direction: column;
   border-radius: 20px;
@@ -180,4 +185,61 @@
   .itemstatus{
     font-size: 10px;
   }
+}
+
+.iinfo{
+  font-size: 50px;
+}
+.backbtn{
+  margin: 10px;
+}
+.users{
+  display: flex;flex-wrap: wrap;margin: 20px;
+}
+.user{
+  display: flex;flex-direction: column;justify-content: center;align-items: center;
+  margin: 20px;min-width: 112px;
+}
+.userpic{
+  border-radius: 50%;width: 200px;height: 200px;
+}
+.username{
+  font-size: 22px;
+}
+.useremail{
+  font-weight: 600;
+}
+.us{
+  margin-top: 200px;
+}
+@media (max-width:768px) {
+  .user{
+    margin: 15px;
+  }
+  .userpic{
+    border-radius: 50%;width: 150px;height: 150px;
+  }
+  .username{
+    font-size: 20px;
+  }
+}
+@media (max-width:450px) {
+  .users{
+    margin: 10px;
+  }
+  .user{
+    margin: 15px;
+  }
+  .userpic{
+    border-radius: 50%;width: 80px;height: 80px;
+  }
+  .username{
+    font-size: 18px;
+  }
+  .useremail{
+    font-size: small;
+  }
+}
+.admin{
+  font-weight: bold;
 }
